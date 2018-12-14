@@ -2,7 +2,7 @@
 #include <iostream>
 #include <unistd.h>
 
-int main00() {
+int main() {
 	pr::ServerSocket ss(1664);
 
 	while (1) {
@@ -12,7 +12,7 @@ int main00() {
 
 		int lu;
 		read(fd, &lu, sizeof(int));
-		std::cout << "lu =" << lu << std::endl;
+		std::cout << "serveur lu =" << lu << std::endl;
 		lu++;
 		write(fd, &lu, sizeof(int));
 		sc.close();
@@ -21,14 +21,14 @@ int main00() {
 	return 0;
 }
 
-int main() {
+int main00() {
 	pr::ServerSocket ss(1664);
 
 	while (1) {
 		pr::Socket sc = ss.accept();
 
 		int fd = sc.getFD();
-
+		//std::cout<<fd<<std::endl;
 		ssize_t msz = sizeof(int);
 		while (1) {
 			int lu;

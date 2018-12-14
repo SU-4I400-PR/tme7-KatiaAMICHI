@@ -4,7 +4,7 @@
 #include <netinet/ip.h>
 #include <string>
 #include <iosfwd>
-
+#include <arpa/inet.h>
 namespace pr {
 
 class Socket {
