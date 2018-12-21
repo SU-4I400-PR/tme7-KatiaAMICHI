@@ -20,15 +20,14 @@ bool TCPServer::startServer(int port){
 			pool->addJob(new JobConcret(clone,s));
 			pool->start(1);
 		}
-	//return true;
-	}
 	return true;
+	}
+	return false;
 }
 
 
 void TCPServer::stopServer (){
 	ss->close();
-	//pool->stop();
 	handler->~ConnectionHandler();
 	pool->~Pool();
 }

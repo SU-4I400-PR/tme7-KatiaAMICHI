@@ -5,53 +5,73 @@
 #include <stdlib.h>
 #include <fstream>
 #include <sstream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdio.h>
 
-/*
 int main(int argc, char* argv[]) {
 	pr::Socket sock;
-	sock.connect(argv[2], atoi(argv[3]));
-	std::string PATH_FILE_TO_SEND = "";
-	std::fstream fs;
-	char file_size[256];
 
+	sock.connect("127.0.0.1", 1664);
+	//sock.connect(argv[2], atoi(argv[3]));
+	const char * PATH_FILE_TO_SEND = "/users/nfs/Etu9/3703039/tme7PR/tme7PR.txt";
+	const char * PATH_FILE_TO_R = "/users/nfs/Etu9/3703039/tme7PR/FileReceiverClient.txt";
+	int sizeFileR;
+	std::ofstream outFile(PATH_FILE_TO_R,std::ofstream::out);
+	std::ifstream inFile(PATH_FILE_TO_SEND,std::ifstream::binary);
+	int sizeFile;
+	enum REQ {LIST, UPLOAD, DOWNLOAD};
 	while(1){
 		std::string s;
 		std::cin>>s;
 		int r = 0;
-		switch(s){
-			case "LIST":
+		int written;
+		switch(atoi(s.c_str())){
+			case 1:
 				r=1;
-				std::string listOUT;
 				write(sock.getFD(),&r,sizeof(int));
 				read(sock.getFD(),&r,sizeof(int));
-				read(sock.getFD(),&listOUT, r*sizeof(char));
+				std::cout<<"r : "<<r<<std::endl;
+				char listOUT[r+1];
+				read(sock.getFD(),&listOUT, r);
+				std::cout<<"listOUT : "<<listOUT<<std::endl;
 				break;
-			case "UPLOAD":
+			case 2:
 				r=2;
-
-		        fd = fs.open(PATH_FILE_TO_SEND, O_RDONLY);
-
-				break;
-			case "DOWNLOAD":
-				r=3;
 				write(sock.getFD(),&r,sizeof(int));
 
+				// la taille
+				inFile.seekg (0, inFile.end);
+				sizeFile = inFile.tellg();
+				inFile.seekg (0, inFile.beg);
+				char buffer[1024];
+				//write(sock.getFD(),&sizeFile,sizeof(int));
+
+				// contenue du file dans buffer
+				inFile.read(buffer, sizeFile);
+
+				write(sock.getFD(), buffer, sizeFile);
+				inFile.close();
+				break;
+			case 3:
+				r=3;
+				write(sock.getFD(),&r,sizeof(int));
+				sizeFileR = 1024;
+				char bufferR[sizeFileR];
+				read(sock.getFD(),&bufferR,sizeFileR);
+				std::cout<<"buffer : "<<bufferR<<std::endl;
+				outFile << bufferR;
+				outFile.close();
 				break;
 			default:
 				break;
 		}
-
-		fs.close();
-
+		sock.close();
 	}
 
-
-	int N=42;
-	write(sock.getFD(),&N,sizeof(int));
-
-	std::cout << N << std::endl;
 	return 0;
-}*/
+}
 
 int main000() {
 	pr::Socket sock;
@@ -65,7 +85,7 @@ int main000() {
 
 
 // avec controle
-int main() {
+int main_exo1() {
 
 	pr::Socket sock;
 
@@ -91,7 +111,6 @@ int main() {
 	} else {
 		std::cout << "connection refused" << std::endl;
 	}
-
 	return 0;
 }
 

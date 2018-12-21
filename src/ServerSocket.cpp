@@ -23,7 +23,6 @@ namespace pr{
 		sin.sin_family = AF_INET;
 		sin.sin_port = htons(port);
 		sin.sin_addr.s_addr = htonl(INADDR_ANY);
-		std::cout<<"prof"<<&sin<<std::endl;
 		socketfd = ::socket(AF_INET,SOCK_STREAM,0);
 		if (socketfd<0){
 			perror("socket"); exit(1);
